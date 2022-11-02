@@ -9,6 +9,7 @@ solution_schema = TicDatFactory(files_found=[["Filename", "Entry Number"], ["Con
                                 files_not_found=[["Filename"], []])
 solution_schema.set_data_type("files_found", "Entry Number", strings_allowed=(), number_allowed=True)
 solution_schema.set_data_type("files_found", "Contents", strings_allowed='*', number_allowed=False)
+solution_schema.set_default_value("files_found", "Contents", "")
 
 def _code_dir():
     code_file = os.path.abspath(inspect.getsourcefile(_code_dir))
@@ -17,6 +18,8 @@ def _code_dir():
 def _try_get_data_from_file(filename):
     fullpath = os.path.join(_code_dir(), filename)
     if os.path.exists(fullpath):
+        if fullpath.lower().endswith(".md"):
+            return ["not", "loading", "md", "files"]
         with open(fullpath, "r") as f:
             return json.load(f)
 
